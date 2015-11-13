@@ -6,11 +6,14 @@
 #define TXRX_BUF_LEN                      20
 
 BLE                                       ble;
-Timeout                                   timeout;                
+Timeout                                   timeout;
 
 static uint8_t rx_buf[TXRX_BUF_LEN];
 static uint8_t rx_buf_num;
 static uint8_t rx_state=0;
+
+/* デバイス名を定義 */
+static const char DEVICENAME[] = "HIKARU_BLENANO";
 
 static uint8_t sensorValue;
 
@@ -67,16 +70,16 @@ void setup() {
     // BLEPayloadデータセッティング
     ble.accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED);
     ble.accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME,
-                                     (const uint8_t *)"HIKARU_BLENANO", sizeof("HIKARU_BLENANO"));
+                                     (const uint8_t *)DEVICENAME, sizeof(DEVICENAME));
     ble.accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_128BIT_SERVICE_IDS,
                                      (const uint8_t *)uart_base_uuid_rev, sizeof(uart_base_uuid_rev));
                 
     // set adv_type
-    ble.setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);    
+    ble.setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
     // add service
     ble.addService(uartService);
     // set device name
-    ble.setDeviceName((const uint8_t *)"HIKARU_BLENANO");
+    ble.setDeviceName((const uint8_t *)DEVICENAME);
     // set tx power,valid values are -40, -20, -16, -12, -8, -4, 0, 4
     ble.setTxPower(4);
     // set adv_interval, 100ms in multiples of 0.625ms.
